@@ -19,7 +19,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: auto #"javascript-typescript, java-kotlin, c-cpp, python, ruby, swift, go, csharp" 
+        languages: "auto" #"javascript-typescript, java-kotlin, c-cpp, python, ruby, swift, go, csharp" 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis
