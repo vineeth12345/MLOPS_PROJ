@@ -18,9 +18,9 @@ jobs:
       uses: actions/checkout@v3
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
-      with:
-        languages: "auto" #"javascript-typescript, java-kotlin, c-cpp, python, ruby, swift, go, csharp" 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      #with:
+        #languages: "auto" #"javascript-typescript, java-kotlin, c-cpp, python, ruby, swift, go, csharp" 
+    #- name: Autobuild
+      #uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
