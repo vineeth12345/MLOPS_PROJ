@@ -51,6 +51,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'  # Adjust to the Java version your project uses
+        distribution: 'temurin'  # Specify the distribution, e.g., 'temurin', 'zulu', 'adopt'
 
     - name: Build Java Project
       if: contains(env.languages, 'java')
