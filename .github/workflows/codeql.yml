@@ -34,8 +34,8 @@ jobs:
       with:
         languages: ${{ env.languages }}
 
-    - name: Autobuild code
-      uses: github/codeql-action/autobuild@v3
+    #- name: Autobuild code
+      #uses: github/codeql-action/autobuild@v3
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
