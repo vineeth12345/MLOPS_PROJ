@@ -34,21 +34,28 @@ jobs:
       with:
         languages: ${{ env.languages }}
 
-    - name: Conditional .NET Setup
+    - name: Set up .NET Core
       if: contains(env.languages, 'csharp')
-      run: |
-        echo "C# detected, setting up .NET..."
-        echo "##[group]Setting up .NET"
-        dotnet --info
-        echo "##[endgroup]"
-
-    - name: Install .NET Dependencies
-      if: contains(env.languages, 'csharp')
-      run: dotnet restore
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'  # Adjust to the .NET version your project uses
 
     - name: Build .NET Project
       if: contains(env.languages, 'csharp')
-      run: dotnet build --configuration Release --no-incremental -v diag
+      run: |
+        dotnet restore
+        dotnet build --configuration Release --no-incremental -v diag
+
+    - name: Set up Java
+      if: contains(env.languages, 'java')
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'  # Adjust to the Java version your project uses
+
+    - name: Build Java Project
+      if: contains(env.languages, 'java')
+      run: |
+        ./gradlew build  # Replace with your actual build command if different
 
     - name: Create CodeQL Database for C#
       if: contains(env.languages, 'csharp')
@@ -56,8 +63,14 @@ jobs:
         echo "Creating CodeQL database for C#..."
         codeql database create codeql-db --language=csharp --command="dotnet build /p:UseSharedCompilation=false /p:Deterministic=true"
 
-    - name: Autobuild code
-      if: "!contains(env.languages, 'csharp')"
+    - name: Create CodeQL Database for Java
+      if: contains(env.languages, 'java')
+      run: |
+        echo "Creating CodeQL database for Java..."
+        codeql database create codeql-db --language=java --command="./gradlew build"
+
+    - name: Autobuild for Other Languages
+      if: "!contains(env.languages, 'csharp') && !contains(env.languages, 'java')"
       uses: github/codeql-action/autobuild@v3
 
     - name: Perform CodeQL Analysis
