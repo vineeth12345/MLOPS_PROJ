@@ -34,8 +34,31 @@ jobs:
       with:
         languages: ${{ env.languages }}
 
-    #- name: Autobuild code
-      #uses: github/codeql-action/autobuild@v3
+    - name: Conditional .NET Setup
+      if: contains(env.languages, 'csharp')
+      run: |
+        echo "C# detected, setting up .NET..."
+        echo "##[group]Setting up .NET"
+        dotnet --info
+        echo "##[endgroup]"
+
+    - name: Install .NET Dependencies
+      if: contains(env.languages, 'csharp')
+      run: dotnet restore
+
+    - name: Build .NET Project
+      if: contains(env.languages, 'csharp')
+      run: dotnet build --configuration Release --no-incremental -v diag
+
+    - name: Create CodeQL Database for C#
+      if: contains(env.languages, 'csharp')
+      run: |
+        echo "Creating CodeQL database for C#..."
+        codeql database create codeql-db --language=csharp --command="dotnet build /p:UseSharedCompilation=false /p:Deterministic=true"
+
+    - name: Autobuild code
+      if: "!contains(env.languages, 'csharp')"
+      uses: github/codeql-action/autobuild@v3
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
